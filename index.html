@@ -156,7 +156,7 @@ fetch(SHEET_URL)
         extra = ` • <a href="${show.tickets}" target="_blank" style="color:var(--accent)">Tickets</a>`;
       }
 
-      li.innerHTML = `<strong>${show.date}</strong> – ${show.venue} – ${show.city}${extra}`;
+      li.innerHTML = `<strong>${show.display_date || show.date}</strong> – ${show.venue} – ${show.city}${extra}`;
       list.appendChild(li);
     });
   })
