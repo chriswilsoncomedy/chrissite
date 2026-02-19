@@ -102,15 +102,7 @@ body{
   line-height: 1.65;
   text-align: center;
 }
-
-.bottom-socials {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-}
 </style>
-
 
 
 </head>
@@ -146,35 +138,7 @@ body{
 
 
 <script>
-const SHEET_URL = 'https://api.sheetbest.com/sheets/da9058a6-749d-4521-b259-1ff6e8b8b0c8';
-
-fetch(SHEET_URL)
-  .then(res => res.json())
-  .then(data => {
-    const list = document.getElementById('shows-list');
-    list.innerHTML = '';
-
-    const today = new Date();
-    today.setHours(0,0,0,0);
-
-    const upcoming = data
-      .filter(show => {
-        const d = new Date(show.date);
-        return !isNaN(d) && d >= today;
-      })
-      .sort((a,b) => new Date(a.date) - new Date(b.date));
-
-    if (upcoming.length === 0) {
-      list.innerHTML = '<li>New shows coming soon</li>';
-      return;
-    }
-
-    upcoming.forEach(show => {
-      const li = document.createElement('li');
-
-      let extra = '';
-      if (show.free && show.free.toLowerCase() === 'yes') {
-        extra = ' • <span style="color:var(--accent)">Free Admission</span>';
+const SHEET_URL = 'https://opensheet.elk.sh/1AbCdEfGhIjKlMnOpQrStUvWxYz/Sheet1"color:var(--accent)">Free Admission</span>';
       } else if (show.tickets) {
         extra = ` • <a href="${show.tickets}" target="_blank" style="color:var(--accent)">Tickets</a>`;
       }
