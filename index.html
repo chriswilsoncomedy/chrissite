@@ -137,21 +137,59 @@ body{
 </section>
 
 
+
 <script>
-const SHEET_URL = 'https://opensheet.elk.sh/1u3gpTFUONt-G9dmfEBIOxCqSjgBFFuF3Ep8fOtgMoVU/Sheet1"color:var(--accent)">Free Admission</span>';
-      } else if (show.tickets) {
-        extra = ` • <a href="${show.tickets}" target="_blank" style="color:var(--accent)">Tickets</a>`;
+const SHEET_URL = 'https://opensheet.elk.sh/1u3gpTFUONt-G9dmfEBIOxCqSjgBFFuF3Ep8fOtgMoVU/Sheet1';
+
+fetch(SHEET_URL)
+  .then(res => res.json())
+  .then(data => {
+    const list = document.getElementById('shows-list');
+    list.innerHTML = '';
+
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    const shows = data
+      .map(show => {
+        const parsed = new Date(show.date + "T00:00:00");
+        show.parsedDate = parsed;
+        return show;
+      })
+      .filter(show => !isNaN(show.parsedDate) && show.parsedDate >= today)
+      .sort((a, b) => a.parsedDate - b.parsedDate);
+
+    if (shows.length === 0) {
+      list.innerHTML = '<li>New show dates coming soon.</li>';
+      return;
+    }
+
+    shows.forEach(show => {
+      const li = document.createElement('li');
+
+      let ticketText = '';
+      if (show.tickets && show.tickets.startsWith('http')) {
+        ticketText = ` • <a href="${show.tickets}" target="_blank">Tickets</a>`;
+      } else if (show.free && show.free.toLowerCase() === 'yes') {
+        ticketText = ' • Free Admission';
       }
 
-      li.innerHTML = `<strong>${show.display_date || show.date}</strong> – ${show.venue} – ${show.city}${extra}`;
+      li.innerHTML = `
+        <strong>${show.display_date || show.date}</strong> – 
+        ${show.venue || ''} – 
+        ${show.city || ''}
+        ${ticketText}
+      `;
+
       list.appendChild(li);
     });
   })
   .catch(() => {
     document.getElementById('shows-list').innerHTML =
-      '<li>Show dates coming soon</li>';
+      '<li>Unable to load shows at this time.</li>';
   });
 </script>
+
 
 
 <section id="videos">
